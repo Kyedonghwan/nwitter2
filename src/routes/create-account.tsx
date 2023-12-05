@@ -55,7 +55,7 @@ export default function CreateAccount() {
     <Error>{error}</Error>
     <Switcher>
       Do you have an account?{" "}
-      <Link to="/login">Log in &rarr;</Link>
+      <Link to="/login">log in &rarr;</Link>
     </Switcher>
   </Wrapper>
 }
