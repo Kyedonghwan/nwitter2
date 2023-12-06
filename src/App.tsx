@@ -12,6 +12,7 @@ import LoadingScreen from './components/loading-screen';
 import { auth } from './firebase';
 import styled from 'styled-components';
 import ProtectedRoute from './components/protected-route';
+import Timeline from './components/timeline';
 
 const Wrapper = styled.div`
   height: 100vh;

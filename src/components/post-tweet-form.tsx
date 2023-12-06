@@ -11,8 +11,9 @@ const Form = styled.form`
 `;
 
 const TextArea = styled.textarea`
-  border: 2px solid white;
+  box-sizing: border-box;
   padding: 20px;
+  border: 2px solid white;
   border-radius: 20px;
   font-size: 16px;
   color: white;
