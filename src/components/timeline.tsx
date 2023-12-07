@@ -1,8 +1,9 @@
 import { Unsubscribe, collection, limit, onSnapshot, orderBy, query } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import styled from "styled-components";
 import { db } from "../firebase";
 import Tweet from "./tweet";
+import { IChangeEditAction, ISelectEditAction } from "../actions/actions";
 
 export interface ITweet {
   photo?: string;
@@ -11,6 +12,7 @@ export interface ITweet {
   username: string;
   createdAt: number;
   id: string;
+  dispatch?: Dispatch<IChangeEditAction | ISelectEditAction>
 }
 
 const Wrapper = styled.div`

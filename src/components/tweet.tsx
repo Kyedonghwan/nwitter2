@@ -3,6 +3,10 @@ import { auth, db, storage } from "../firebase";
 import { ITweet } from "./timeline";
 import styled from "styled-components";
 import { deleteObject, ref } from "firebase/storage";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { ChangeEditAction, SelectEditAction } from "../actions/actions";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,8 +45,22 @@ const DeleteButton = styled.button`
   cursor: pointer;
 `
 
-export default function Tweet({username, photo, tweet, userId, id}:ITweet) {
+const EditButton = styled.button`
+  margin-left: 20px;
+  background-color: #03c75a;
+  color: white;
+  font-weight: 600;
+  border: 0;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+`
+
+function Tweet({username, photo, tweet, userId, id, dispatch}:ITweet) {
   const user = auth.currentUser;
+  const [isEdit, setIsEdit] = useState(false);
+
   const onDelete = async() => {
     if(user?.uid !==userId) return;
     const ok = confirm("Are you sure you want to delete this tweet?");
@@ -60,12 +78,31 @@ export default function Tweet({username, photo, tweet, userId, id}:ITweet) {
     }
   }
 
+  const onEdit = async() => {
+    if(dispatch) {
+      dispatch(ChangeEditAction(isEdit));
+      dispatch(SelectEditAction({username, photo, tweet, userId, id}));
+      setIsEdit(!isEdit);
+    }
+  }
+
   return <Wrapper>
-      <div style={{flex: 1}}>
-        <Username>{username}</Username>
-        <Payload>{tweet}</Payload>
-        {user?.uid ===  userId ? <DeleteButton onClick={onDelete}>Delete</DeleteButton>: null }
-      </div>
-      {photo? <Photo src={photo} /> : null}
-  </Wrapper>
+            <div style={{flex: 1}}>
+              <Username>{username}</Username>
+              <Payload>{tweet}</Payload>
+              {user?.uid ===  userId ? <>
+                <DeleteButton onClick={onDelete}>Delete</DeleteButton>
+                {!isEdit ? <EditButton onClick={onEdit}>Edit</EditButton> : null}
+              </>: null }
+            </div>
+            {photo? <Photo src={photo} /> : null}
+        </Wrapper>
 }
+
+function MapDispatchToProps (dispatch:Dispatch) {
+  return {
+    dispatch
+  }
+}
+
+export default connect<null, typeof MapDispatchToProps>(null, MapDispatchToProps)(Tweet);
